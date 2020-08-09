@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserService } from '../user/user.service';
 import { map } from 'rxjs/operators';
 import { Product } from 'src/app/models/products';
@@ -8,7 +8,7 @@ import { Product } from 'src/app/models/products';
   providedIn: 'root'
 })
 export class ProductService {
-  getAllProductUrl = 'http://localhost/api/products'
+  productUrl = 'http://localhost/api/products'
   constructor(private http : HttpClient, private userService : UserService) { }
 
   getAllProducts(params){
@@ -28,7 +28,7 @@ export class ProductService {
 
     console.log(query.toString());
     
-    return this.http.get(`${this.getAllProductUrl}?${query.toString()}`, 
+    return this.http.get(`${this.productUrl}?${query.toString()}`, 
        {
          headers : {
            'authorization' : this.userService.getToken()
@@ -41,7 +41,7 @@ export class ProductService {
   }
 
   getProductById(id : string){
-    return this.http.get(`${this.getAllProductUrl}/${id}`,
+    return this.http.get(`${this.productUrl}/${id}`,
        {
          headers : {
            'authorization' : this.userService.getToken()
@@ -52,5 +52,21 @@ export class ProductService {
      })
    )
   }
+
+
+  saveProduct(data : FormData){
+    let headers = new HttpHeaders({
+      'authorization' : this.userService.getToken()
+    })
+    return this.http.post(this.productUrl, data ,
+       {
+        headers
+   }).pipe(
+     map((result : {message : string, product : Product})=>{
+       return <Product>result.product
+     })
+   )
+  }
+
 
 }
