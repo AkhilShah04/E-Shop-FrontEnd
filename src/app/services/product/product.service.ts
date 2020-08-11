@@ -68,5 +68,16 @@ export class ProductService {
    )
   }
 
+  updateProduct(id , data){
+    let headers = new HttpHeaders({
+      'authorization' : this.userService.getToken()
+    })
+    console.log(id , data);
+    
+    return this.http.patch(`${this.productUrl}/${id}`,  data ,
+       {
+        headers
+   })
+  }
 
 }
