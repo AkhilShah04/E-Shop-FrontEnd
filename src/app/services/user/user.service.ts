@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+  private getAllUsersUrl="http://localhost/api/users";
   private userSignupUrl="http://localhost/api/users/signup";
   private userLoginUrl="http://localhost/api/users/login";
   private isAdminUrl = "http://localhost:/api/users/is-admin";
@@ -36,6 +37,13 @@ export class UserService {
     return localStorage.getItem('token') ? localStorage.getItem('token') : "";
   }
 
+  isLogggedIn(){
+    if(this.getToken() != ''){
+      return true;
+    }
+    return false;
+  }
+
   isAdmin(){
     let headers = new HttpHeaders({
       'authorization' : this.getToken()
@@ -54,6 +62,19 @@ export class UserService {
       })
     )
   }
+
+  getAll(){
+    let headers = new HttpHeaders({
+      'authorization' : this.getToken()
+    })
+    return this.http.get(this.getAllUsersUrl, {headers}).pipe(
+      map((result : {users :User[]})=>{
+        return result.users
+      })
+    )
+  }
+
+
   login(credentials : {email : string, password : string}){
     return this.http.post(this.userLoginUrl, credentials)
     .pipe(

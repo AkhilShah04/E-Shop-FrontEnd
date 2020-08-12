@@ -1,4 +1,6 @@
+import { SummaryService } from './../../../services/summary/summary.service';
 import { Component, OnInit } from '@angular/core';
+import { Summary } from 'src/app/models/summary';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -6,10 +8,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
+  summary: Summary;
 
-  constructor() { }
+  constructor(private summaryService : SummaryService) { }
 
   ngOnInit(): void {
+    this.getSummary()
+  }
+
+  getSummary(){
+    this.summaryService.getSummary().subscribe({
+      next : summary=>{
+        this.summary =summary;
+      }
+    })
   }
 
 }

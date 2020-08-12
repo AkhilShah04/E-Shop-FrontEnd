@@ -17,11 +17,9 @@ export class HeaderComponent implements OnInit {
   constructor(private cartService : CartService,private router : Router, private userService : UserService) {
     router.events.subscribe({
       next : (event)=>{
-        console.log(event);
         if(event instanceof NavigationStart)
         {
           let url = (<NavigationStart>event).url
-          console.log(url.includes('admin'))
           this.isAdminUrl = url.includes('/admin')
         }
       }
@@ -31,7 +29,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.cartService.cartObservable.subscribe({
       next : (cart)=>{
-        console.log(cart);
         this.numberOfItems = Object.keys(cart).length
       }
     })
